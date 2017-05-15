@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PLUGINS>
+	<PLUGIN name="SF Tools: TemplateDependenceChecker" url="TemplateDependenceChecker/TemplateDependenceChecker_dlg.asp" compatibility="7.5" company="SF eBusiness GmbH" contact="Stefan Buchali" email="stefan.buchali@sfe.de" telefon="07032/932-303" website="www.sfe.de">
+		<DESCRIPTIONS>
+			<DEU name="Template-Verwendung in Tochterprojekten anzeigen"/>
+			<ENG name="Show template usage in child projects"/>
+			<ENU name="Show template usage in child projects"/>
+		</DESCRIPTIONS>
+		<TARGETS>
+			<TARGET target="ioTreeApp4015"/><!-- Content-Klasse -->
+		</TARGETS>
+		<ICON source="../ActionMenuIcons/PredefineTemplates.gif" alt="Template-Verwendung in Tochterprojekten anzeigen"/>
+		<OPENWINDOWPARAMETER features="toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,width=500,height=550,screenX=200,screenY=200,left=200,top=200"/>
+	</PLUGIN>
+</PLUGINS>
