@@ -92,3 +92,18 @@ You may exercise the freedoms specified here provided that you comply with the e
 - If you copy or distribute the program, you must accompany it with the complete corresponding machine-readable source code or with a written offer, valid for at least three years, to furnish the complete corresponding machine-readable source code.
 
 Any of the above conditions can be waived if you get permission from the copyright holder.
+
+## Changelog
+
+**Version 2.0**  
+Oct 8, 2014  
+Added counting instances  
+Adaption for version 11 (ENU instead of ENG in plugin XML file)
+
+**Version 1.1**  
+April 28, 2011  
+Adaption for version 10
+
+**Version 1.0**  
+May 6, 2009  
+Plugin created
