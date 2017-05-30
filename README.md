@@ -96,13 +96,16 @@ Any of the above conditions can be waived if you get permission from the copyrig
 ## Changelog
 
 **Version 2.0**  
-Oct 8, 2014  
-Added counting instances  
+September 10, 2014  
+Add counting instances
+
+**Version 1.2**  
+October 25, 2013  
 Adaption for version 11 (ENU instead of ENG in plugin XML file)
 
 **Version 1.1**  
 April 28, 2011  
-Adaption for version 10
+Adaption for version 10 (ASP object changed)
 
 **Version 1.0**  
 May 6, 2009  
