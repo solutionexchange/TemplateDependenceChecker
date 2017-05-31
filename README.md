@@ -1,5 +1,5 @@
 # TemplateDependenceChecker
-_Version 2.0_
+_Version 2.1_
 
 "TemplateDependenceChecker" is a SmartTree enhancement for the Opentext Website Management Server allowing to check the assignment of every template of a content class within all connected projects.
 
@@ -13,7 +13,8 @@ This is third party software. The author is not affiliated in any manner with Op
 
 Copy the folder "TemplateDependenceChecker" into the folder "plugins" of your CMS installation.  
 Switch to Server Manager and import the plugin via "Administer Plug-Ins" - "Plug-Ins", action menu "Import Plug-In".  
-Assign it to all your desired projects and set the appropriate user rights there if necessary.
+Assign it to all your desired projects and set the appropriate user rights there if necessary.  
+Activate it.
 
 The plugin then appears in the action menu of every content class node within these projects.
 
@@ -27,8 +28,9 @@ This file contains the dialog box the plugin will start with. Translate the germ
 
 This file contains the plugin script itself. Translate the german variables (lines 21-32) if necessary.
 
-The plugin must be run under an administrator account. Please enter the corresponding login data. This user must have the role "Administrator" and "Template 
-Editor" in all projects, and the number of allowed sessions should be set to at least 2.
+The plugin must be run under an administrator account. Please enter the corresponding login data in lines 18+19.  
+This user must have the role "Administrator" and "Template Editor" in all projects, and the number of allowed sessions should be set to at least 2.  
+The user also must have access to all language variants in every project. If a language variant is denied for him, it will not occur in the report, and there will be no error message regarding this.
 
 ## How to use
 
@@ -45,14 +47,16 @@ Finally it will show a report that lists:
   - Which one is not assigned at all.
   - The number of active instances of the content class
 
-The report looks like the following:
+The report looks like the following block. This block repeats for each project:
 
 ```
 Project: <Name of the connected project>
 
 <Name of the 1st template>: -  
-<Name of the 2nd template >: Assigned to <Number> project variants  
-<Number> Instances
+<Name of the 2nd template >: Assigned to <Number> project variants
+
+<Name of language variant 1>: <Number> Instances
+<Name of language variant 2>: <Number> Instances
 ```
 
 (The "-" after the first template means that it is not assigned).
@@ -67,6 +71,28 @@ The following error messages can occur:
   The project is connected to the content class folder, but it does not use it.
 - "Content class not found" (Variable `dlgContentClassNotFound`):  
   The content class cannot be accessed (e.g. due to authorization packets).
+
+## Changelog
+
+**Version 2.1**  
+May 31, 2017  
+Language specific counting of instances
+
+**Version 2.0**  
+September 10, 2014  
+Add counting instances
+
+**Version 1.2**  
+October 25, 2013  
+Adaption for version 11 (ENU instead of ENG in plugin XML file)
+
+**Version 1.1**  
+April 28, 2011  
+Adaption for version 10 (ASP object changed)
+
+**Version 1.0**  
+May 6, 2009  
+Plugin created
 
 ## License and exclusion of liability
 
@@ -92,21 +118,3 @@ You may exercise the freedoms specified here provided that you comply with the e
 - If you copy or distribute the program, you must accompany it with the complete corresponding machine-readable source code or with a written offer, valid for at least three years, to furnish the complete corresponding machine-readable source code.
 
 Any of the above conditions can be waived if you get permission from the copyright holder.
-
-## Changelog
-
-**Version 2.0**  
-September 10, 2014  
-Add counting instances
-
-**Version 1.2**  
-October 25, 2013  
-Adaption for version 11 (ENU instead of ENG in plugin XML file)
-
-**Version 1.1**  
-April 28, 2011  
-Adaption for version 10 (ASP object changed)
-
-**Version 1.0**  
-May 6, 2009  
-Plugin created

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <PLUGINS>
-	<PLUGIN name="SF Tools: TemplateDependenceChecker" url="TemplateDependenceChecker/TemplateDependenceChecker_dlg.asp" compatibility="7.5" company="SF eBusiness GmbH" contact="Stefan Buchali" email="stefan.buchali@sfe.de" telefon="07032/932-303" website="www.sfe.de">
+	<PLUGIN name="SF Tools: TemplateDependenceChecker" url="TemplateDependenceChecker/TemplateDependenceChecker_dlg.asp" compatibility="7.5" company="UDG United Digital Group" contact="Stefan Buchali" email="stefan.buchali@udg.de" telefon="+49 7032 932 303" website="www.udg.de">
 		<DESCRIPTIONS>
 			<DEU name="Template-Verwendung in Tochterprojekten anzeigen"/>
 			<ENG name="Show template usage in child projects"/>

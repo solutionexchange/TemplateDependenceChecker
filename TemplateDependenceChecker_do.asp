@@ -60,6 +60,10 @@ set XMLTemplatesDoc = Server.CreateObject("MSXML2.DOMDocument")
 XMLTemplatesDoc.async = false
 XMLTemplatesDoc.validateOnParse = false
 	
+set XMLLanguagesDoc = Server.CreateObject("MSXML2.DOMDocument")
+XMLLanguagesDoc.async = false
+XMLLanguagesDoc.validateOnParse = false
+	
 ' RedDot Object fuer RQL-Zugriffe anlegen
 set objIO = Server.CreateObject("OTWSMS.AspLayer.PageData")
 
@@ -188,13 +192,46 @@ if InStr(ServerAnswer,"guid")>0 then
 
 					Set TemplateVariantList = nothing
 					
-					'Instanzen zählen
+					'Verfügbare Sprachen auslesen
 					xmlSendDoc=	"<IODATA loginguid=""" & RqlAdmLoginGUID & """ sessionkey=""" & RqlAdmSessionKey & """>"&_
-									"<PAGE action=""search"" templateguid=""" & TemplateToCheckGUID & """ flags=""0"" maxrecords=""999999""/>"&_
+									"<PROJECT>"&_
+										"<LANGUAGEVARIANTS action=""list""/>"&_
+									"</PROJECT>"&_
 								"</IODATA>"
 					ServerAnswer = objIO.ServerExecuteXml (xmlSendDoc, sError)
-					XMLDoc.loadXML(ServerAnswer)
-					resultStr = resultStr & "<p>" & XMLDoc.SelectNodes("//PAGE").length & " " & dlgInstances & "</p>"
+					XMLLanguagesDoc.loadXML(ServerAnswer)
+
+					CurrentLangGuid = XMLLanguagesDoc.selectSingleNode("//LANGUAGEVARIANT[@checked='1']").getAttribute("guid")
+
+					resultStr = resultStr & "<p>"
+					Set IterateLanguages = XMLLanguagesDoc.selectNodes("//LANGUAGEVARIANT")
+					for each IterateLanguage in IterateLanguages
+						'Umschalten zur Sprache
+						xmlSendDoc=	"<IODATA loginguid=""" & RqlAdmLoginGUID & """ sessionkey=""" & RqlAdmSessionKey & """>"&_
+														"<PROJECT>"&_
+															"<LANGUAGEVARIANT action=""setactive"" guid="""&IterateLanguage.getAttribute("guid")&"""/>"&_
+														"</PROJECT>"&_
+													"</IODATA>"
+						ServerAnswer = objIO.ServerExecuteXml (xmlSendDoc, sError)
+
+						'Instanzen zählen
+						xmlSendDoc=	"<IODATA loginguid=""" & RqlAdmLoginGUID & """ sessionkey=""" & RqlAdmSessionKey & """>"&_
+										"<PAGE action=""search"" templateguid=""" & TemplateToCheckGUID & """ flags=""0"" maxrecords=""999999""/>"&_
+									"</IODATA>"
+						ServerAnswer = objIO.ServerExecuteXml (xmlSendDoc, sError)
+						XMLDoc.loadXML(ServerAnswer)
+						resultStr = resultStr & IterateLanguage.getAttribute("name") & " (" & IterateLanguage.getAttribute("language") & "): " & XMLDoc.SelectNodes("//PAGE").length & " " & dlgInstances & "<br />"
+					next
+					Set IterateLanguages = nothing
+					resultStr = resultStr & "</p>"
+
+					'Zurückschalten zur Anfangsprache
+					xmlSendDoc=	"<IODATA loginguid=""" & RqlAdmLoginGUID & """ sessionkey=""" & RqlAdmSessionKey & """>"&_
+													"<PROJECT>"&_
+														"<LANGUAGEVARIANT action=""setactive"" guid=""" & CurrentLangGuid & """/>"&_
+													"</PROJECT>"&_
+												"</IODATA>"
+					ServerAnswer = objIO.ServerExecuteXml (xmlSendDoc, sError)
 					
 				else
 					resultStr = resultStr & "<p><b>" & dlgError & ": " & dlgContentClassNotFound & "!</b></p>"
@@ -229,6 +266,7 @@ set XMLDoc = nothing
 set XMLFoldersDoc = nothing
 set XMLProjDoc = nothing
 set XMLTemplatesDoc = nothing
+set XMLLanguagesDoc = nothing
 set objIO = nothing
 %>
 <html>
