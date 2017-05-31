@@ -1,5 +1,5 @@
 ﻿<% 
-'Copyright (C) 2009  Stefan Buchali, SF eBusiness GmbH, Herrenberg, Germany, www.sfe.de
+'Copyright (C) Stefan Buchali, UDG United Digital Group, www.udg.de
 '
 'This software is licensed under a
 'Creative Commons GNU General Public License (http://creativecommons.org/licenses/GPL/2.0/)
