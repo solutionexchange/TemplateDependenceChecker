@@ -20,6 +20,7 @@ UserPW = ""
 
 pluginTitle = "Template-Verwendung in Tochterprojekten anzeigen" 'Show template usage in child projects
 dlgProject = "Projekt" 'Project
+dlgMasterProject = "Masterprojekt" 'Master project
 dlgUsedIn = "Verwendet in" 'Assigned to
 dlgProjectVariants = "Projektvarianten" 'project variants
 dlgInstances = "Instanzen" 'Instances
@@ -41,7 +42,7 @@ TemplateFolderGUID = Request.Form("TemplateFolderGUID")
 TemplateFolderName = Request.Form("TemplateFolderName")
 TemplateGUID = Request.Form("TemplateGUID")
 TemplateName = Request.Form("TemplateName")
-
+countMaster = Request.Form("master")
 
 ' XML-Verarbeitung per Microsoft-DOM vorbereiten
 set XMLProjDoc = Server.CreateObject("MSXML2.DOMDocument")
@@ -60,16 +61,82 @@ set XMLTemplatesDoc = Server.CreateObject("MSXML2.DOMDocument")
 XMLTemplatesDoc.async = false
 XMLTemplatesDoc.validateOnParse = false
 	
-set XMLLanguagesDoc = Server.CreateObject("MSXML2.DOMDocument")
-XMLLanguagesDoc.async = false
-XMLLanguagesDoc.validateOnParse = false
-	
 ' RedDot Object fuer RQL-Zugriffe anlegen
 set objIO = Server.CreateObject("OTWSMS.AspLayer.PageData")
 
 ' Variablendeklaration
 Dim xmlSendDoc		' RQL-Anfrage, die zum Server geschickt wird
 Dim ServerAnswer	' Antwort des Servers
+
+
+function countInstances(lGUID, sKey)
+
+	instancesStr = ""
+
+	set XMLLanguagesDoc = Server.CreateObject("MSXML2.DOMDocument")
+	XMLLanguagesDoc.async = false
+	XMLLanguagesDoc.validateOnParse = false
+
+	set XMLInstancesDoc = Server.CreateObject("MSXML2.DOMDocument")
+	XMLInstancesDoc.async = false
+	XMLInstancesDoc.validateOnParse = false
+
+	'Verfügbare Sprachen auslesen
+	xmlSendDoc=	"<IODATA loginguid=""" & lGUID & """ sessionkey=""" & sKey & """>"&_
+					"<PROJECT>"&_
+						"<LANGUAGEVARIANTS action=""list""/>"&_
+					"</PROJECT>"&_
+				"</IODATA>"
+	ServerAnswer = objIO.ServerExecuteXml (xmlSendDoc, sError)
+	XMLLanguagesDoc.loadXML(ServerAnswer)
+
+	CurrentLangGuid = XMLLanguagesDoc.selectSingleNode("//LANGUAGEVARIANT[@checked='1']").getAttribute("guid")
+
+	instancesStr = instancesStr & "<p>"
+	Set IterateLanguages = XMLLanguagesDoc.selectNodes("//LANGUAGEVARIANT")
+	for each IterateLanguage in IterateLanguages
+		'Umschalten zur Sprache
+		xmlSendDoc=	"<IODATA loginguid=""" & lGUID & """ sessionkey=""" & sKey & """>"&_
+										"<PROJECT>"&_
+											"<LANGUAGEVARIANT action=""setactive"" guid="""&IterateLanguage.getAttribute("guid")&"""/>"&_
+										"</PROJECT>"&_
+									"</IODATA>"
+		ServerAnswer = objIO.ServerExecuteXml (xmlSendDoc, sError)
+
+		'Instanzen zählen
+		xmlSendDoc=	"<IODATA loginguid=""" & lGUID & """ sessionkey=""" & sKey & """>"&_
+						"<PAGE action=""search"" templateguid=""" & TemplateToCheckGUID & """ flags=""0"" maxrecords=""999999""/>"&_
+					"</IODATA>"
+		ServerAnswer = objIO.ServerExecuteXml (xmlSendDoc, sError)
+		XMLInstancesDoc.loadXML(ServerAnswer)
+		instancesStr = instancesStr & IterateLanguage.getAttribute("name") & " (" & IterateLanguage.getAttribute("language") & "): " & XMLInstancesDoc.SelectNodes("//PAGE").length & " " & dlgInstances & "<br />"
+	next
+	Set IterateLanguages = nothing
+	instancesStr = instancesStr & "</p>"
+
+	'Zurückschalten zur Anfangsprache
+	xmlSendDoc=	"<IODATA loginguid=""" & lGUID & """ sessionkey=""" & sKey & """>"&_
+									"<PROJECT>"&_
+										"<LANGUAGEVARIANT action=""setactive"" guid=""" & CurrentLangGuid & """/>"&_
+									"</PROJECT>"&_
+								"</IODATA>"
+	ServerAnswer = objIO.ServerExecuteXml (xmlSendDoc, sError)
+
+	set XMLLanguagesDoc = nothing
+	set XMLInstancesDoc = nothing
+	
+	countInstances = instancesStr
+
+end function
+
+
+'Beginn Main
+
+if countMaster = "1" then
+	'Instanzen im Masterprojekt zählen
+	resultStr = resultStr & "<hr/><p><b>" & dlgMasterProject & "</b></p>"
+	resultStr = resultStr & countInstances(LoginGUID, RQLKey)
+end if
 
 
 'Freigegebene Projekte auslesen
@@ -93,7 +160,7 @@ ServerAnswer = objIO.ServerExecuteXml (xmlSendDoc, sError)
 if InStr(ServerAnswer,"guid")>0 then
 	XMLDoc.loadXML(ServerAnswer)
 	RqlAdmLoginGUID = XMLDoc.selectsinglenode("/IODATA/LOGIN/@guid").text
-
+	
 	for each Projekt in ProjekteList
 	
 		resultStr = resultStr & "<hr/><p><b>" & dlgProject & ": " & Projekt.getAttribute("name") & "</b></p>"
@@ -192,47 +259,9 @@ if InStr(ServerAnswer,"guid")>0 then
 
 					Set TemplateVariantList = nothing
 					
-					'Verfügbare Sprachen auslesen
-					xmlSendDoc=	"<IODATA loginguid=""" & RqlAdmLoginGUID & """ sessionkey=""" & RqlAdmSessionKey & """>"&_
-									"<PROJECT>"&_
-										"<LANGUAGEVARIANTS action=""list""/>"&_
-									"</PROJECT>"&_
-								"</IODATA>"
-					ServerAnswer = objIO.ServerExecuteXml (xmlSendDoc, sError)
-					XMLLanguagesDoc.loadXML(ServerAnswer)
-
-					CurrentLangGuid = XMLLanguagesDoc.selectSingleNode("//LANGUAGEVARIANT[@checked='1']").getAttribute("guid")
-
-					resultStr = resultStr & "<p>"
-					Set IterateLanguages = XMLLanguagesDoc.selectNodes("//LANGUAGEVARIANT")
-					for each IterateLanguage in IterateLanguages
-						'Umschalten zur Sprache
-						xmlSendDoc=	"<IODATA loginguid=""" & RqlAdmLoginGUID & """ sessionkey=""" & RqlAdmSessionKey & """>"&_
-														"<PROJECT>"&_
-															"<LANGUAGEVARIANT action=""setactive"" guid="""&IterateLanguage.getAttribute("guid")&"""/>"&_
-														"</PROJECT>"&_
-													"</IODATA>"
-						ServerAnswer = objIO.ServerExecuteXml (xmlSendDoc, sError)
-
-						'Instanzen zählen
-						xmlSendDoc=	"<IODATA loginguid=""" & RqlAdmLoginGUID & """ sessionkey=""" & RqlAdmSessionKey & """>"&_
-										"<PAGE action=""search"" templateguid=""" & TemplateToCheckGUID & """ flags=""0"" maxrecords=""999999""/>"&_
-									"</IODATA>"
-						ServerAnswer = objIO.ServerExecuteXml (xmlSendDoc, sError)
-						XMLDoc.loadXML(ServerAnswer)
-						resultStr = resultStr & IterateLanguage.getAttribute("name") & " (" & IterateLanguage.getAttribute("language") & "): " & XMLDoc.SelectNodes("//PAGE").length & " " & dlgInstances & "<br />"
-					next
-					Set IterateLanguages = nothing
-					resultStr = resultStr & "</p>"
-
-					'Zurückschalten zur Anfangsprache
-					xmlSendDoc=	"<IODATA loginguid=""" & RqlAdmLoginGUID & """ sessionkey=""" & RqlAdmSessionKey & """>"&_
-													"<PROJECT>"&_
-														"<LANGUAGEVARIANT action=""setactive"" guid=""" & CurrentLangGuid & """/>"&_
-													"</PROJECT>"&_
-												"</IODATA>"
-					ServerAnswer = objIO.ServerExecuteXml (xmlSendDoc, sError)
-					
+					'Instanzen zählen
+					resultStr = resultStr & countInstances(RqlAdmLoginGUID, RqlAdmSessionKey)
+										
 				else
 					resultStr = resultStr & "<p><b>" & dlgError & ": " & dlgContentClassNotFound & "!</b></p>"
 				end if
@@ -266,7 +295,6 @@ set XMLDoc = nothing
 set XMLFoldersDoc = nothing
 set XMLProjDoc = nothing
 set XMLTemplatesDoc = nothing
-set XMLLanguagesDoc = nothing
 set objIO = nothing
 %>
 <html>

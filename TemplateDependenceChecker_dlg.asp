@@ -19,7 +19,8 @@ pluginTitle = "Template-Verwendung in Tochterprojekten anzeigen" 'Show template 
 dlgFolder = "Ordner" 'Folder
 dlgCK = "Content-Klasse" 'Content Class
 dlgHeadline = "Achtung!" 'Attention!
-dlgContent = "Bitte w&auml;hlen Sie eine Content-Klasse aus." 'Please choose a Content Class
+dlgContent = "Bitte w&auml;hlen Sie eine Content-Klasse aus." 'Please choose a Content Class.
+dlgAlsoMaster = "Auch die Instanzen des Masterprojekts zählen." 'Also take the master project's instances into account.
 dlgPleaseWait = "Bitte warten" 'Please wait
 dlgMessage = "Die &Uuml;berprüfung der abh&auml;ngigen Projekte kann einige Zeit in Anspruch nehmen!" 'Checking all child projects can take some minutes.
 dlgOK = "OK"
@@ -157,6 +158,11 @@ function submitForm() {
 		<tr>
 		<td></td>
 		<td><%=dlgContent %></td>
+		<td></td>
+		</tr>
+		<tr>
+		<td></td>
+		<td><label><input type="checkbox" name="master" value="1" /> <%=dlgAlsoMaster %></label></td>
 		<td></td>
 		</tr>
 <% if dlgContinue then %>
