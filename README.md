@@ -1,5 +1,5 @@
 # TemplateDependenceChecker
-_Version 2.1_
+_Version 2.2_
 
 "TemplateDependenceChecker" is a SmartTree enhancement for the Opentext Website Management Server allowing to check the assignment of every template of a content class within all connected projects.
 
@@ -26,7 +26,7 @@ This file contains the dialog box the plugin will start with. Translate the germ
 
 ####  TemplateDependenceChecker_do.asp
 
-This file contains the plugin script itself. Translate the german variables (lines 21-32) if necessary.
+This file contains the plugin script itself. Translate the german variables (lines 21-33) if necessary.
 
 The plugin must be run under an administrator account. Please enter the corresponding login data in lines 18+19.  
 This user must have the role "Administrator" and "Template Editor" in all projects, and the number of allowed sessions should be set to at least 2.  
@@ -34,8 +34,10 @@ The user also must have access to all language variants in every project. If a l
 
 ## How to use
 
-In every project, the plugin will appear in the action menu of every content class. After clicking OK, the plugin reads the project variant assignment of the selected content 
+In every project the plugin was assigned, it will appear in the action menu of content classes. After clicking OK, the plugin reads the project variant assignment of the selected content 
 class in every project that is connected to the corresponding content class folder.
+
+Optionally it also counts the number of active instances of the content class within the master project.
 
 This process can take some minutes.
 
@@ -73,6 +75,10 @@ The following error messages can occur:
   The content class cannot be accessed (e.g. due to authorization packets).
 
 ## Changelog
+
+**Version 2.2**  
+August 25, 2017  
+Also take instances of the master project into account (optionally)
 
 **Version 2.1**  
 May 31, 2017  

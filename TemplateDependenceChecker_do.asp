@@ -69,7 +69,7 @@ Dim xmlSendDoc		' RQL-Anfrage, die zum Server geschickt wird
 Dim ServerAnswer	' Antwort des Servers
 
 
-function countInstances(lGUID, sKey)
+function countInstances(lGUID, sKey, tGUID)
 
 	instancesStr = ""
 
@@ -105,7 +105,7 @@ function countInstances(lGUID, sKey)
 
 		'Instanzen zählen
 		xmlSendDoc=	"<IODATA loginguid=""" & lGUID & """ sessionkey=""" & sKey & """>"&_
-						"<PAGE action=""search"" templateguid=""" & TemplateToCheckGUID & """ flags=""0"" maxrecords=""999999""/>"&_
+						"<PAGE action=""search"" templateguid=""" & tGUID & """ flags=""0"" maxrecords=""999999""/>"&_
 					"</IODATA>"
 		ServerAnswer = objIO.ServerExecuteXml (xmlSendDoc, sError)
 		XMLInstancesDoc.loadXML(ServerAnswer)
@@ -135,7 +135,7 @@ end function
 if countMaster = "1" then
 	'Instanzen im Masterprojekt zählen
 	resultStr = resultStr & "<hr/><p><b>" & dlgMasterProject & "</b></p>"
-	resultStr = resultStr & countInstances(LoginGUID, RQLKey)
+	resultStr = resultStr & countInstances(LoginGUID, RQLKey, TemplateGUID)
 end if
 
 
@@ -260,7 +260,7 @@ if InStr(ServerAnswer,"guid")>0 then
 					Set TemplateVariantList = nothing
 					
 					'Instanzen zählen
-					resultStr = resultStr & countInstances(RqlAdmLoginGUID, RqlAdmSessionKey)
+					resultStr = resultStr & countInstances(RqlAdmLoginGUID, RqlAdmSessionKey, TemplateToCheckGUID)
 										
 				else
 					resultStr = resultStr & "<p><b>" & dlgError & ": " & dlgContentClassNotFound & "!</b></p>"

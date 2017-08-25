@@ -117,9 +117,10 @@ function submitForm() {
 	if(submitOK) {
 		submitOK=false;
 		document.getElementById("messageDiv").innerText='<%=dlgPleaseWait %>...';
+		document.TemplateDependenceCheckerForm.submit();
+		document.getElementById("cbMaster").disabled=true;
 		document.getElementById("btn1").disabled=true;
 		document.getElementById("btn2").disabled=true;
-		document.TemplateDependenceCheckerForm.submit();
 	}
 }
 </script>
@@ -160,12 +161,15 @@ function submitForm() {
 		<td><%=dlgContent %></td>
 		<td></td>
 		</tr>
+<% if dlgContinue then %>
+		<tr>
+		<td height="15" colspan="3"></td>
+		</tr>
 		<tr>
 		<td></td>
-		<td><label><input type="checkbox" name="master" value="1" /> <%=dlgAlsoMaster %></label></td>
+		<td><label><input type="checkbox" name="master" id="cbMaster" value="1" /> <%=dlgAlsoMaster %></label></td>
 		<td></td>
 		</tr>
-<% if dlgContinue then %>
 		<tr>
 		<td height="15" colspan="3"></td>
 		</tr>
