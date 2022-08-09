@@ -1,5 +1,5 @@
 # TemplateDependenceChecker
-_Version 2.2_
+_Version 2.3_
 
 "TemplateDependenceChecker" is a SmartTree enhancement for the Opentext Website Management Server allowing to check the assignment of every template of a content class within all connected projects.
 
@@ -75,6 +75,10 @@ The following error messages can occur:
   The content class cannot be accessed (e.g. due to authorization packets).
 
 ## Changelog
+**Version 2.3**  
+August 9, 2022  
+Admin-Login now via Access-Token
+
 
 **Version 2.2**  
 August 25, 2017  
