@@ -16,7 +16,7 @@ RQLKey=Session("Sessionkey")
 LoginGUID=Session("LoginGUID")
 
 'Pre-defined Texts
-UserToken = "s^?x%}9U]jeyTp1_tU9yy3)aA[RH1Gjx"
+UserToken = ""
 
 pluginTitle = "Template-Verwendung in Tochterprojekten anzeigen" 'Show template usage in child projects
 dlgProject = "Projekt" 'Project
