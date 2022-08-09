@@ -36,7 +36,7 @@ dlgContinue = false
 set XMLDoc = Server.CreateObject("MSXML2.DOMDocument")
 XMLDoc.async = false
 XMLDoc.validateOnParse = false
-	
+
 ' RedDot Object fuer RQL-Zugriffe anlegen
 set objIO = Server.CreateObject("OTWSMS.AspLayer.PageData")
 

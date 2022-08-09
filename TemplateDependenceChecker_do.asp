@@ -1,4 +1,5 @@
-﻿<% 
+﻿<!-- #include file="./aspJSON1.19.asp" -->
+<% 
 'Copyright (C) Stefan Buchali, UDG United Digital Group, www.udg.de
 '
 'This software is licensed under a
@@ -15,8 +16,7 @@ RQLKey=Session("Sessionkey")
 LoginGUID=Session("LoginGUID")
 
 'Pre-defined Texts
-UserName = ""
-UserPW = ""
+UserToken = ""
 
 pluginTitle = "Template-Verwendung in Tochterprojekten anzeigen" 'Show template usage in child projects
 dlgProject = "Projekt" 'Project
@@ -150,16 +150,27 @@ XMLProjDoc.loadXML(ServerAnswer)
 
 Set ProjekteList = XMLProjDoc.selectNodes("//PROJECT[@sharedrights='1']")
 
-
-
 'Login als RQLAdmin
-xmlSendDoc=	"<IODATA>"&_
-				"<ADMINISTRATION action=""login"" name=""" & UserName & """ password=""" & UserPW & """ />"&_
-			"</IODATA>"
-ServerAnswer = objIO.ServerExecuteXml (xmlSendDoc, sError)
-if InStr(ServerAnswer,"guid")>0 then
-	XMLDoc.loadXML(ServerAnswer)
-	RqlAdmLoginGUID = XMLDoc.selectsinglenode("/IODATA/LOGIN/@guid").text
+RestApiURL = Request.ServerVariables("HTTP_HOST") & "/cms/WebService/v2/sessions/"
+if Request.ServerVariables("HTTPS") = "on" then
+	RestApiURL = "https://" & RestApiURL
+else
+	RestApiURL = "http://" & RestApiURL
+end if
+
+Dim oXMLHttp
+Set oXMLHttp=Server.Createobject("MSXML2.ServerXMLHTTP.6.0")
+str = "{ AccessToken: '" & UserToken & "', ProjectGuid: '' }"
+oXMLHttp.open "POST", RestApiURL, false
+oXMLHttp.setRequestHeader "Content-Type", "application/json"
+oXMLHttp.send str
+
+Set oJSON = New aspJSON
+oJSON.loadJSON(oXMLHttp.responseText)
+
+RqlAdmLoginGUID = oJSON.data("Guid")
+
+if RqlAdmLoginGUID <> "" then
 	
 	for each Projekt in ProjekteList
 	
