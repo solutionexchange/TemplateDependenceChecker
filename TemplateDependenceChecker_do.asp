@@ -15,9 +15,10 @@ Response.Charset = "utf-8"
 RQLKey=Session("Sessionkey")
 LoginGUID=Session("LoginGUID")
 
-'Pre-defined Texts
-UserToken = ""
+UserToken = "s^?x%}9U]jeyTp1_tU9yy3)aA[RH1Gjx"
+RestApiURL = "https://" & Session("EditorialServer") & "/cms/WebService/v2/sessions/"
 
+'Pre-defined Texts
 pluginTitle = "Template-Verwendung in Tochterprojekten anzeigen" 'Show template usage in child projects
 dlgProject = "Projekt" 'Project
 dlgMasterProject = "Masterprojekt" 'Master project
@@ -151,13 +152,6 @@ XMLProjDoc.loadXML(ServerAnswer)
 Set ProjekteList = XMLProjDoc.selectNodes("//PROJECT[@sharedrights='1']")
 
 'Login als RQLAdmin
-RestApiURL = Request.ServerVariables("HTTP_HOST") & "/cms/WebService/v2/sessions/"
-if Request.ServerVariables("HTTPS") = "on" then
-	RestApiURL = "https://" & RestApiURL
-else
-	RestApiURL = "http://" & RestApiURL
-end if
-
 Dim oXMLHttp
 Set oXMLHttp=Server.Createobject("MSXML2.ServerXMLHTTP.6.0")
 str = "{ AccessToken: '" & UserToken & "', ProjectGuid: '' }"
