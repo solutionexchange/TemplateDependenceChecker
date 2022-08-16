@@ -15,7 +15,7 @@ Response.Charset = "utf-8"
 RQLKey=Session("Sessionkey")
 LoginGUID=Session("LoginGUID")
 
-UserToken = "s^?x%}9U]jeyTp1_tU9yy3)aA[RH1Gjx"
+UserToken = ""
 RestApiURL = "https://" & Session("EditorialServer") & "/cms/WebService/v2/sessions/"
 
 'Pre-defined Texts
